@@ -34,7 +34,9 @@ void Arg::processInput(){
         string option;
         for(unsigned i=1;i<argSplited.size();i++){
             option += argSplited[i];
-            option += " ";
+            if((++i)<argSplited.size()){
+                option += " ";
+            }
         }
         a->setOption(option);
         a->setArg(true);
