@@ -17,7 +17,7 @@ using std::pair;
 using std::make_pair;
 
 class Arg{
-    private:
+    public:
         class Argument{
             public:
                 Argument(){}
@@ -55,8 +55,7 @@ class Arg{
 
                 
         };
-
-
+    private:
         vector<string> split(const string , char = ' ');
 
         vector<Argument> arguments;
@@ -69,6 +68,7 @@ class Arg{
 
     public:
         Arg(int ,char **);
+        Arg(int ,char **, Argument []);
 
         void newArgument(string, bool = false, string = "");
 

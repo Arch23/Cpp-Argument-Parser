@@ -10,26 +10,47 @@ void Arg::newArgument(string arg, bool required, string alias ){
 
 void Arg::validateArguments(){
     processInput();
+    bool error{false};
+    string errorMsg{""};
     for(Argument a : arguments){
         if(a.getRequired() && a.getOption().empty()){
-            throw std::runtime_error("Required argument: "+a.getArg());
+            if(error){
+                errorMsg += "\n";
+            }
+            error = true;
+            errorMsg += "Required argument: "+a.getArg();
         }
+    }
+    if(error){
+        throw std::runtime_error(errorMsg);
     }
 }
 
 void Arg::processInput(){
-    string argString{""};
     vector<string> argVector;
+    bool error{false};
+    string errorMsg{""};
+
     for(int i=1;i<argc;i++){
-        argString += argv[i];
-        argString += " ";
+        string arg = argv[i];
+        if(arg[0] == '-'){
+            arg.erase(0,1);
+            argVector.push_back(arg);
+        }else{
+            argVector.back() += " ";
+            argVector.back() += arg;
+        }
     }
-    argVector = split(argString,'-');
+    
     for(string arg : argVector){
         vector<string> argSplited = split(arg);
         Argument *a = getArgument(argSplited[0]);
-        if(a==NULL){
-            throw std::runtime_error("Unexpected argument: "+argSplited[0]);
+        if(a==nullptr){
+            if(error){
+                errorMsg += "\n";
+            }
+            error = true;
+            errorMsg += "Unexpected argument: "+argSplited[0];
         }
         string option;
         for(unsigned i=1;i<argSplited.size();i++){
@@ -41,6 +62,9 @@ void Arg::processInput(){
         a->setOption(option);
         a->setArg(true);
     }
+    if(error){
+        throw std::runtime_error(errorMsg);
+    }
 }
 
 Arg::Argument* Arg::getArgument(string arg){
@@ -49,12 +73,12 @@ Arg::Argument* Arg::getArgument(string arg){
             return(&a);
         } 
     }
-    return(NULL);
+    return(nullptr);
 }
 
 bool Arg::isSet(string arg){
     Argument *a = getArgument(arg);
-    if(a!=NULL){
+    if(a!=nullptr){
         return(a->isSet());
     }
     return false;
@@ -62,7 +86,7 @@ bool Arg::isSet(string arg){
 
 string Arg::getOption(string arg){
     Argument *a = getArgument(arg);
-    if(a!=NULL){
+    if(a!=nullptr){
         return(a->getOption());
     }
     return {};
