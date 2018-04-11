@@ -14,9 +14,12 @@ int main(int argc, char **argv){
     int age;
     bool newRecord;
 
-    arg.newArgument("name",true);
-    arg.newArgument("age",true);
-    arg.newArgument("occupation",false,"oc");
+    arg.setProgramName("Test Arg program");
+    arg.setHelp();
+
+    arg.newArgument("name|n",true,"new user name.");
+    arg.newArgument("age|a",true,"new user age.");
+    arg.newArgument("occupation|oc|occup",false,"new user occupation, default is unemployed.");
     arg.newArgument("new");
 
     try{
