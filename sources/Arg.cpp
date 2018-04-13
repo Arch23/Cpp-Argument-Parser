@@ -114,13 +114,17 @@ string Arg::help(){
 }
 
 Arg::Argument* Arg::getArgument(string arg){
-    for(Argument &a : arguments){
-        for(string name : a.getArg()){
-            if(name == arg){
-                return(&a);
-            } 
+    vector<string> argV = split(arg,'|');
+    for(string s : argV){
+        for(Argument &a : arguments){
+            for(string name : a.getArg()){
+                if(name == s){
+                    return(&a);
+                } 
+            }
         }
     }
+    
     return(nullptr);
 }
 
